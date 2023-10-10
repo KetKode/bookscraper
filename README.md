@@ -1,4 +1,4 @@
-# bookscraping 📖
+# bookscraper 📖
 **Scraper collecting data from Goodreads.**
 
 In this code I'm scraping through a list of books published on Goodreads, collect **url, title, rating**.
