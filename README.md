@@ -1,5 +1,5 @@
 # bookscraping 📖
-Scraper collecting data from Goodreads.
+**Scraper collecting data from Goodreads.**
 
 In this code I'm scraping through a list of books published on Goodreads, collect **url, title, rating**.
 Spider also collects **summary and cover** from each book's page (10.000 in total)
