@@ -7,7 +7,7 @@ It iterates through all pages (100) until there is no more next page.
 
 By running 
 ```
-scrapy crawl book_scraper -o <your file name>.csv
+scrapy crawl book_scraper -o <create any file name>.csv
 ```
 
 you will get your data in a csv file.
