@@ -38,14 +38,22 @@ class BookScraperSpider(scrapy.Spider):
         cover_url = response.css('.BookPage__bookCover .ResponsiveImage::attr(src)').extract_first()
         rating = response.css('.RatingStatistics__interactive .RatingStatistics__rating::text').extract_first()
         genres = response.css('.BookPageMetadataSection__genreButton .Button__labelItem::text').extract()
-        summary_tags = response.css('[data-testid="description"]').get()
 
+        summary_tags = response.css('[data-testid="description"]').get()
         summary = re.sub(r'<.*?>', '', summary_tags)
+
+        pages_text = response.css('p[data-testid="pagesFormat"]::text').get()
+        pages_pattern = r'(\d+)\s+pages'
+        pages_match = re.search(pages_pattern, pages_text)
+        if pages_match:
+            number_of_pages = int(pages_match.group(1))
+
 
         book_data['cover_url'] = cover_url
         book_data['rating'] = rating
         book_data['summary'] = summary
         book_data['genres'] = genres
+        book_data['number_of_pages'] = number_of_pages
 
         yield book_data
 
