@@ -7,6 +7,9 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+
+from shutil import which
+
 BOT_NAME = "selenium_scraper"
 
 SPIDER_MODULES = ["selenium_scraper.spiders"]
@@ -51,8 +54,8 @@ ROBOTSTXT_OBEY = True
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-           "scrapy_selenium.SeleniumMiddleware": 800
-    }
+     'scrapy_selenium.SeleniumMiddleware': 800
+     }
 
 
 # Enable or disable extensions
@@ -95,5 +98,6 @@ FEED_EXPORT_ENCODING = "utf-8"
 
 
 SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_ARGUMENTS = ["--headless=new"]
+SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
+SELENIUM_DRIVER_ARGUMENTS=['--headless']
 
