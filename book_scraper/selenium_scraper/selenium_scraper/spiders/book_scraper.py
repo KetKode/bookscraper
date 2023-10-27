@@ -2,6 +2,7 @@ import scrapy
 from scrapy_selenium import SeleniumRequest
 from selenium import webdriver
 import re
+import json
 
 
 class BookScraperSpider(scrapy.Spider):
@@ -47,13 +48,63 @@ class BookScraperSpider(scrapy.Spider):
         pages_match = re.search(pages_pattern, pages_text)
         if pages_match:
             number_of_pages = int(pages_match.group(1))
+            time_to_finish = (number_of_pages * 2) / 60
 
+            time = f"{int (time_to_finish)} hours {int ((time_to_finish * 60) % 60)} minutes"
+
+        amazon_link = None
+
+        script_content = response.css('script#__NEXT_DATA__::text').extract_first ()
+        data = json.loads(script_content)
+
+        apollo_state = data.get ("props", {}).get ("pageProps", {}).get ("apolloState", {})
+
+        book_key = None
+        for key in apollo_state:
+            if "Book" in key:
+                book_key = key
+                break
+
+        if book_key:
+            # Extract the 'id' field from the found book key
+            book_id = apollo_state[book_key].get("id")
+            print("Book ID:", book_id)
+            book_key = f"Book:" + book_id
+            print(book_key)
+            amazon_link = apollo_state.get(book_key, {}).get('links({})', {}).get('primaryAffiliateLink', {}).get("url")
+            print(type(amazon_link))
+
+            if amazon_link:
+                print ("Amazon Link:", amazon_link)
+            else:
+                print ("Amazon link not found for the given book key.")
+
+
+
+        # print ("Data:", data)
+        # props = data.get ("props", {})
+        # print ("Props:", props)
+        # page_props = props.get ("pageProps", {})
+        # print ("Page Props:", page_props)
+        # apollo_state = page_props.get ("apolloState", {})
+        # print ("Apollo State:", apollo_state)
+        # links_data = apollo_state.get ("links({})", {})
+        # print ("Links Data:", links_data)
+        #
+        # for key, value in apollo_state.items ():
+        #     if "primaryAffiliateLink" in value:
+        #         amazon_link = value["primaryAffiliateLink"].get ("url")
+        #         break
+
+        # Access the Amazon link data
 
         book_data['cover_url'] = cover_url
         book_data['rating'] = rating
         book_data['summary'] = summary
         book_data['genres'] = genres
         book_data['number_of_pages'] = number_of_pages
+        book_data['time'] = time
+        book_data['amazon_link'] = amazon_link
 
         yield book_data
 

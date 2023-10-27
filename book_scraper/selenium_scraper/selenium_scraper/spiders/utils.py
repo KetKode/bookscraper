@@ -14,6 +14,6 @@ def delete_rows_with_empty_fields(input_file_path, output_file_path):
                 writer.writerow(row)
 
 # Usage
-input_csv_file_path = 'booksall.csv'
-output_csv_file_path = 'filtered_booksall.csv'
-delete_rows_with_empty_fields(input_csv_file_path, output_csv_file_path)
+# input_csv_file_path = 'booksall.csv'
+# output_csv_file_path = 'filtered_booksall.csv'
+# delete_rows_with_empty_fields(input_csv_file_path, output_csv_file_path)
