@@ -68,16 +68,10 @@ class BookScraperSpider(scrapy.Spider):
         if book_key:
             # Extract the 'id' field from the found book key
             book_id = apollo_state[book_key].get("id")
-            print("Book ID:", book_id)
             book_key = f"Book:" + book_id
-            print(book_key)
             amazon_link = apollo_state.get(book_key, {}).get('links({})', {}).get('primaryAffiliateLink', {}).get("url")
-            print(type(amazon_link))
 
-            if amazon_link:
-                print ("Amazon Link:", amazon_link)
-            else:
-                print ("Amazon link not found for the given book key.")
+            audible_link = apollo_state.get(book_key, {}).get('links({})', {}).get('secondaryAffiliateLinks')[0].get("url")
 
 
 
@@ -105,6 +99,7 @@ class BookScraperSpider(scrapy.Spider):
         book_data['number_of_pages'] = number_of_pages
         book_data['time'] = time
         book_data['amazon_link'] = amazon_link
+        book_data['audible_link'] = audible_link
 
         yield book_data
 
