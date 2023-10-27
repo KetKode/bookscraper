@@ -12,7 +12,7 @@ class BookScraperSpider(scrapy.Spider):
         self.driver = webdriver.Chrome()
 
     def start_requests(self):
-        url = "https://www.goodreads.com/list/show/19341.Best_Science_Fiction"
+        url = "https://www.goodreads.com/list/show/191758.2023_Goodreads_Choice_Predictions"
         yield SeleniumRequest(url=url, callback=self.parse)
 
     def parse(self, response):
