@@ -2,7 +2,8 @@
 **Scraper collecting data from Goodreads.**
 
 In this code I'm scraping through a list of books published on Goodreads, collect **url, title, rating**.
-Spider also collects **summary and cover** from each book's page (10.000 in total)
+Spider also collects **summary and cover, genres, buy links, number of pages** from each book's page.
+There is additional script to calculate estimated amount of time needed to finish the book.
 It iterates through all pages (100) until there is no more next page.
 
 By running 
