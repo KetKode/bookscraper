@@ -13,7 +13,7 @@ class BookScraperSpider(scrapy.Spider):
         self.driver = webdriver.Chrome()
 
     def start_requests(self):
-        url = "https://www.goodreads.com/list/show/43.Best_Young_Adult_Books"
+        url = "https://www.goodreads.com/list/show/162960.Booktok_rec"
         yield SeleniumRequest(url=url, callback=self.parse)
 
     def parse(self, response):
@@ -75,6 +75,10 @@ class BookScraperSpider(scrapy.Spider):
             audible_link = apollo_state.get(book_key, {}).get('links({})', {}).get('secondaryAffiliateLinks')[0].get("url")
 
             year_release = apollo_state.get(book_key, {}).get('details', {}).get("publicationTime")
+            timestamp = year_release / 1000
+            year = datetime.datetime.utcfromtimestamp(timestamp).strftime ('%Y')
+
+
 
             format_book = apollo_state.get(book_key, {}).get('details', {}).get("format")
             language = apollo_state.get(book_key, {}).get('details', {}).get('language', {}).get("name")
@@ -108,7 +112,7 @@ class BookScraperSpider(scrapy.Spider):
         book_data['time'] = time
         book_data['amazon_link'] = amazon_link
         book_data['audible_link'] = audible_link
-        book_data['year_release'] = year_release
+        book_data['year'] = year
         book_data['format_book'] = format_book
         book_data['language'] = language
         book_data['isbn'] = isbn
