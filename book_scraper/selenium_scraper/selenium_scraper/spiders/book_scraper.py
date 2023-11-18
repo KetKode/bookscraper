@@ -3,6 +3,7 @@ from scrapy_selenium import SeleniumRequest
 from selenium import webdriver
 import re
 import json
+import datetime
 
 
 class BookScraperSpider(scrapy.Spider):
@@ -12,7 +13,7 @@ class BookScraperSpider(scrapy.Spider):
         self.driver = webdriver.Chrome()
 
     def start_requests(self):
-        url = "https://www.goodreads.com/list/show/191758.2023_Goodreads_Choice_Predictions"
+        url = "https://www.goodreads.com/list/show/43.Best_Young_Adult_Books"
         yield SeleniumRequest(url=url, callback=self.parse)
 
     def parse(self, response):
@@ -54,10 +55,10 @@ class BookScraperSpider(scrapy.Spider):
 
         amazon_link = None
 
-        script_content = response.css('script#__NEXT_DATA__::text').extract_first ()
+        script_content = response.css('script#__NEXT_DATA__::text').extract_first()
         data = json.loads(script_content)
 
-        apollo_state = data.get ("props", {}).get ("pageProps", {}).get ("apolloState", {})
+        apollo_state = data.get("props", {}).get("pageProps", {}).get("apolloState", {})
 
         book_key = None
         for key in apollo_state:
@@ -72,6 +73,13 @@ class BookScraperSpider(scrapy.Spider):
             amazon_link = apollo_state.get(book_key, {}).get('links({})', {}).get('primaryAffiliateLink', {}).get("url")
 
             audible_link = apollo_state.get(book_key, {}).get('links({})', {}).get('secondaryAffiliateLinks')[0].get("url")
+
+            year_release = apollo_state.get(book_key, {}).get('details', {}).get("publicationTime")
+
+            format_book = apollo_state.get(book_key, {}).get('details', {}).get("format")
+            language = apollo_state.get(book_key, {}).get('details', {}).get('language', {}).get("name")
+            isbn = apollo_state.get(book_key, {}).get('details', {}).get("isbn")
+            isbn13 = apollo_state.get(book_key, {}).get('details', {}).get("isbn13")
 
 
 
@@ -100,6 +108,11 @@ class BookScraperSpider(scrapy.Spider):
         book_data['time'] = time
         book_data['amazon_link'] = amazon_link
         book_data['audible_link'] = audible_link
+        book_data['year_release'] = year_release
+        book_data['format_book'] = format_book
+        book_data['language'] = language
+        book_data['isbn'] = isbn
+        book_data['isbn13'] = isbn13
 
         yield book_data
 
